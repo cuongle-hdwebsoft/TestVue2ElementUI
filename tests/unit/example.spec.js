@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import { FormItem, Input, Button, Form, Radio, RadioGroup } from 'element-ui'
+import { FormItem, Input, Button, Form, Radio, RadioGroup, Container } from 'element-ui'
 import App from '../../src/App.vue';
 
 let wrapper;
@@ -22,7 +22,8 @@ const mountConfig = () => {
       ElButton: Button,
       ElRadioGroup: RadioGroup,
       ElRadio: Radio,
-    }
+    },
+    parentComponent: Container
   }
 }
 
@@ -156,14 +157,18 @@ describe('App.vue', () => {
     const value = ['No I am not', 'Yes I am', 'I do not remember']
     
     wrapper = shallowMount(App, mountConfig());
+    // console.log('wrapper.vm.$parent.$options.name', wrapper.vm.$parent.$options.name);
+    // console.log('wrapper.html()', wrapper.html());
 
     const el = wrapper.findComponent({ name: 'ElRadioGroup' });
     el.vm.$emit('input', value[1]);
 
     await wrapper.vm.$nextTick();
+    // console.log('wrapper.html()', wrapper.html());
 
     const elErrorAlert = wrapper.find('.el-form-item__error');
     expect(elErrorAlert.exists()).to.be.true
     expect(elErrorAlert.element.innerHTML.trim()).to.equal('Oh no !!!');
+    expect(wrapper.vm.form.sick).to.equal(value[1]);
   })
 })
